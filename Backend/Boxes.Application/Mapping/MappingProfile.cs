@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Boxes.Application.DTOs;
 using Boxes.Application.Features.Appointments.Commands.CreateAppointment;
-using Boxes.Application.Models;
 using Boxes.Domain.Entities;
 
 namespace Boxes.Application.Mapping
@@ -10,7 +9,6 @@ namespace Boxes.Application.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<Workshop, WorkshopDto>();
 
             CreateMap<ContactDto, Contact>()
                 .ConstructUsing(src => new Contact(src.Name, src.Email, src.Phone));

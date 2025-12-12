@@ -20,7 +20,7 @@ namespace Boxes.Application.Features.Appointments.Commands.CreateAppointment
         public async Task<int> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
         {
             var workshop = await _workshopService.GetWorkshopByIdAsync(request.PlaceId, cancellationToken);
-            if (workshop is null || !workshop.IsActive)
+            if (workshop is null || !workshop.Active)
                 throw new InvalidOperationException($"El taller con PlaceId {request.PlaceId} no existe o no está activo.");
 
             var appointment = _mapper.Map<Appointment>(request);

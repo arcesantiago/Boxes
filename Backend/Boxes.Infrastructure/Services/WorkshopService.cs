@@ -1,17 +1,28 @@
-﻿using Boxes.Application.Contracts.Interfaces;
-using Boxes.Application.Models;
+﻿using AutoMapper;
+using Boxes.Application.Contracts.Interfaces;
+using Boxes.Application.DTOs;
+using Boxes.Infrastructure.Converters;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Boxes.Infrastructure.Services;
 
 public class WorkshopService : IWorkshopService
 {
     private readonly HttpClient _httpClient;
+    private readonly IMapper _mapper;
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        Converters = { new AddressJsonConverter() }
+    };
 
-    public WorkshopService(HttpClient httpClient)
+    public WorkshopService(HttpClient httpClient, IMapper mapper)
     {
         _httpClient = httpClient;
+        _mapper = mapper;
         ConfigureHttpClient();
     }
 
@@ -26,7 +37,7 @@ public class WorkshopService : IWorkshopService
             new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
-    public async Task<IEnumerable<Workshop>> GetActiveWorkshopsAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<WorkshopDto>> GetActiveWorkshopsAsync(CancellationToken cancellationToken = default)
     {
         try
         {
@@ -34,17 +45,10 @@ public class WorkshopService : IWorkshopService
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync(cancellationToken);
-            var workshops = JsonSerializer.Deserialize<List<WorkshopResponse>>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            }) ?? new List<WorkshopResponse>();
+            var workshopsResponse = JsonSerializer.Deserialize<List<WorkshopDto>>(json, JsonOptions)
+                ?? new List<WorkshopDto>();
 
-            var activeWorkshops = workshops
-                .Where(w => w.IsActive)
-                .Select(w => new Workshop(w.Id, w.Name ?? string.Empty, w.Address, w.IsActive))
-                .ToList();
-
-            return activeWorkshops;
+            return workshopsResponse;
         }
         catch (HttpRequestException ex)
         {
@@ -52,16 +56,9 @@ public class WorkshopService : IWorkshopService
         }
     }
 
-    public async Task<Workshop?> GetWorkshopByIdAsync(int placeId, CancellationToken cancellationToken = default)
+    public async Task<WorkshopDto?> GetWorkshopByIdAsync(int placeId, CancellationToken cancellationToken = default)
     {
         var workshops = await GetActiveWorkshopsAsync(cancellationToken);
         return workshops.FirstOrDefault(w => w.Id == placeId);
     }
-
-    private record WorkshopResponse(
-        int Id,
-        string? Name,
-        string? Address,
-        bool IsActive
-    );
 }

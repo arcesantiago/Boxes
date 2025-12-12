@@ -1,6 +1,74 @@
 @Boxes_HostAddress = http://localhost:5111
+@Boxes_HttpsAddress = https://localhost:7202
 
-GET {{Boxes_HostAddress}}/weatherforecast/
-Accept: application/json
+### Variables
+@ContentType = application/json
+
+### ============================================
+### APPOINTMENTS ENDPOINTS
+### ============================================
+
+### GET - Obtener todos los turnos
+GET {{Boxes_HostAddress}}/api/appointments
+Accept: {{ContentType}}
+
+###
+
+### POST - Crear un nuevo turno (Appointment)
+POST {{Boxes_HostAddress}}/api/appointments
+Content-Type: {{ContentType}}
+
+{
+  "placeId": 2222,
+  "appointmentAt": "2024-12-25T10:00:00Z",
+  "serviceType": "Cambio de aceite",
+  "contact": {
+    "name": "Juan Pérez",
+    "email": "juan.perez@example.com",
+    "phone": "+5491123456789"
+  },
+  "vehicle": {
+    "make": "Toyota",
+    "model": "Corolla",
+    "year": 2020,
+    "licensePlate": "ABC123"
+  }
+}
+
+###
+
+### POST - Crear turno sin vehículo (opcional)
+POST {{Boxes_HostAddress}}/api/appointments
+Content-Type: {{ContentType}}
+
+{
+  "placeId": 2222,
+  "appointmentAt": "2024-12-26T14:30:00Z",
+  "serviceType": "Consulta general",
+  "contact": {
+    "name": "María García",
+    "email": "maria.garcia@example.com",
+    "phone": "+5491198765432"
+  }
+}
+
+###
+
+### ============================================
+### WORKSHOPS ENDPOINTS
+### ============================================
+
+### GET - Obtener todos los talleres activos
+GET {{Boxes_HostAddress}}/api/workshops
+Accept: {{ContentType}}
+
+###
+
+### ============================================
+### SWAGGER UI
+### ============================================
+
+### Acceder a Swagger UI (solo en Development)
+# Abrir en navegador: {{Boxes_HostAddress}}/
 
 ###

@@ -1,5 +1,5 @@
 ﻿using Boxes.Application.Contracts.Interfaces;
-using Boxes.Application.Models;
+using Boxes.Application.DTOs;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Boxes.Infrastructure.Services;
@@ -17,9 +17,9 @@ public class CachedWorkshopService : IWorkshopService
         _cache = cache;
     }
 
-    public async Task<IEnumerable<Workshop>> GetActiveWorkshopsAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<WorkshopDto>> GetActiveWorkshopsAsync(CancellationToken cancellationToken = default)
     {
-        if (_cache.TryGetValue(CacheKey, out IEnumerable<Workshop>? cachedWorkshops) && cachedWorkshops != null)
+        if (_cache.TryGetValue(CacheKey, out IEnumerable<WorkshopDto>? cachedWorkshops) && cachedWorkshops != null)
         {
             return cachedWorkshops;
         }
@@ -36,7 +36,7 @@ public class CachedWorkshopService : IWorkshopService
         return workshopsList;
     }
 
-    public async Task<Workshop?> GetWorkshopByIdAsync(int placeId, CancellationToken cancellationToken = default)
+    public async Task<WorkshopDto?> GetWorkshopByIdAsync(int placeId, CancellationToken cancellationToken = default)
     {
         var workshops = await GetActiveWorkshopsAsync(cancellationToken);
         return workshops.FirstOrDefault(w => w.Id == placeId);

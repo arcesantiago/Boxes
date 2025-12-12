@@ -1,6 +1,8 @@
 ﻿using Boxes.Application.Contracts.Infrastructure;
 using Boxes.Application.Contracts.Interfaces;
 using Boxes.Application.Contracts.Persistence;
+using Boxes.Application.Contracts.Persistence.Read;
+using Boxes.Application.Contracts.Persistence.Write;
 using Boxes.Infrastructure.Cache;
 using Boxes.Infrastructure.Repositories;
 using Boxes.Infrastructure.Services;
@@ -17,7 +19,11 @@ public static class InfrastructureServiceRegistration
 
         services.AddSingleton<InMemoryAppointmentRepository>();
 
-        services.AddScoped<IAppointmentUnitOfWork, InMemoryAppointmentUnitOfWork>();
+        services.AddSingleton(typeof(IReadRepository<>), typeof(InMemoryRepositoryBase<>));
+        services.AddSingleton(typeof(IWriteRepository<>), typeof(InMemoryRepositoryBase<>));
+        services.AddSingleton<IAppointmentRepository, InMemoryAppointmentRepository>();
+
+        services.AddSingleton<IAppointmentUnitOfWork, InMemoryAppointmentUnitOfWork>();
 
         services.AddSingleton<ICacheService, MemoryCacheService>();
 
@@ -27,10 +33,13 @@ public static class InfrastructureServiceRegistration
         {
             var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient();
-            var inner = new WorkshopService(httpClient);
+            var mapper = serviceProvider.GetRequiredService<AutoMapper.IMapper>();
+            var inner = new WorkshopService(httpClient, mapper);
             var cache = serviceProvider.GetRequiredService<IMemoryCache>();
             return new CachedWorkshopService(inner, cache);
         });
+
+
 
         return services;
     }
