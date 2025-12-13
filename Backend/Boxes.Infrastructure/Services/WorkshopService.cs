@@ -48,7 +48,7 @@ public class WorkshopService : IWorkshopService
             var workshopsResponse = JsonSerializer.Deserialize<List<WorkshopDto>>(json, JsonOptions)
                 ?? new List<WorkshopDto>();
 
-            return workshopsResponse;
+            return workshopsResponse.Where(w => w.Active);
         }
         catch (HttpRequestException ex)
         {

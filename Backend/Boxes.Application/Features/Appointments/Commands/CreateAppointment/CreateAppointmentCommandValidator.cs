@@ -24,25 +24,27 @@ namespace Boxes.Application.Features.Appointments.Commands.CreateAppointment
 
             RuleFor(x => x.Contact)
                 .NotNull()
-                .WithMessage("Contact es requerido");
+                .WithMessage("Contact es requerido")
+                .DependentRules(() =>
+                {
+                    RuleFor(x => x.Contact!.Name)
+                        .NotEmpty()
+                        .WithMessage("Contact.Name es requerido")
+                        .MaximumLength(200)
+                        .WithMessage("Contact.Name no puede exceder 200 caracteres");
 
-            RuleFor(x => x.Contact.Name)
-                .NotEmpty()
-                .WithMessage("Contact.Name es requerido")
-                .MaximumLength(200)
-                .WithMessage("Contact.Name no puede exceder 200 caracteres");
+                    RuleFor(x => x.Contact!.Email)
+                        .NotEmpty()
+                        .WithMessage("Contact.Email es requerido")
+                        .EmailAddress()
+                        .WithMessage("Contact.Email debe ser un email válido")
+                        .MaximumLength(200)
+                        .WithMessage("Contact.Email no puede exceder 200 caracteres");
+                });
 
-            RuleFor(x => x.Contact.Email)
-                .NotEmpty()
-                .WithMessage("Contact.Email es requerido")
-                .EmailAddress()
-                .WithMessage("Contact.Email debe ser un email válido")
-                .MaximumLength(200)
-                .WithMessage("Contact.Email no puede exceder 200 caracteres");
-
-            RuleFor(x => x.Contact.Phone)
+            RuleFor(x => x.Contact!.Phone)
                 .MaximumLength(50)
-                .When(x => x.Contact.Phone != null)
+                .When(x => x.Contact != null && x.Contact.Phone != null)
                 .WithMessage("Contact.Phone no puede exceder 50 caracteres");
 
             RuleFor(x => x.Vehicle!.LicensePlate)

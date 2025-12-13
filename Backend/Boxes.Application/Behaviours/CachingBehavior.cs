@@ -20,13 +20,13 @@ namespace Boxes.Application.Behaviours
             CancellationToken cancellationToken)
         {
             if (request is not ICacheableQuery cacheable)
-                return await next();
+                return await next(cancellationToken);
 
             var cached = await _cache.GetAsync<TResponse>(cacheable.CacheKey);
             if (cached is not null)
                 return cached;
 
-            var response = await next();
+            var response = await next(cancellationToken);
 
             await _cache.SetAsync(
                 cacheable.CacheKey,

@@ -10,4 +10,7 @@
   <Folder Name="/src/Infrastructure/">
     <Project Path="Boxes.Infrastructure/Boxes.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tst/">
+    <Project Path="Boxes.Test/Boxes.Test.csproj" Id="ef3efcf6-fe90-42b6-8ccf-ad24507a95da" />
+  </Folder>
 </Solution>

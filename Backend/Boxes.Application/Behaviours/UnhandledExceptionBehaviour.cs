@@ -16,7 +16,7 @@ namespace Boxes.Application.Behaviours
         {
             try
             {
-                return await next();
+                return await next(cancellationToken);
             }
             catch (Exception ex)
             {
