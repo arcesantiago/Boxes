@@ -167,6 +167,8 @@
 cd Backend/Boxes.API
 dotnet run --launch-profile http
 
+---
+
 #### Terminal 2 – Frontend
 ```bash
 cd Frontend/boxes
