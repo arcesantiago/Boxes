@@ -41,6 +41,9 @@ namespace Boxes.API.Middleware
                         var validationJson = JsonSerializer.Serialize(validationException.Errors);
                         result = JsonSerializer.Serialize(new CodeErrorException(statusCode,ex.Message,validationJson));
                         break;
+                    case ArgumentException argumentException:
+                        statusCode = (int)HttpStatusCode.BadRequest;
+                        break;
                     //case BadRequestException badRequestException:
                     //    statusCode = (int)HttpStatusCode.BadRequest;
                     //    break;

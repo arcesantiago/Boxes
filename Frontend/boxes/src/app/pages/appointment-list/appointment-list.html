@@ -1,0 +1,117 @@
+<div class="appointment-list-container">
+  <div class="header-section">
+    <h1 class="page-title">
+      <mat-icon>event</mat-icon>
+      <span>Turnos Reservados</span>
+    </h1>
+
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="navigateToCreate()"
+      class="create-button">
+      <mat-icon>add</mat-icon>
+      <span>Nuevo Turno</span>
+    </button>
+  </div>
+
+  <div class="content-section">
+
+    @if (error) {
+      <div class="error-message">
+        <mat-icon color="warn">error</mat-icon>
+        <p>{{ error }}</p>
+      </div>
+    }
+
+    @else {
+      @if (appointments$ | async; as appointments) {
+
+        @if (appointments.length === 0) {
+          <div class="empty-state">
+            <mat-icon class="empty-icon">event_busy</mat-icon>
+            <h2>No hay turnos reservados</h2>
+            <p>Comience creando su primer turno</p>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="navigateToCreate()">
+              <mat-icon>add</mat-icon>
+              Crear Turno
+            </button>
+          </div>
+        }
+
+        @else {
+          <div class="appointments-list">
+            @for (appointment of appointments; track appointment.id) {
+              <mat-card class="appointment-card">
+
+                <mat-card-header>
+                  <mat-card-title>
+                    <mat-icon>build</mat-icon>
+                    {{ appointment.serviceType }}
+                  </mat-card-title>
+
+                  <mat-card-subtitle>
+                    <mat-icon>event</mat-icon>
+{{ appointment.appointmentAt | date:'long' }}
+                  </mat-card-subtitle>
+                </mat-card-header>
+
+                <mat-card-content>
+                  <div class="appointment-info">
+
+                    <div class="contact-info">
+                      <mat-icon>person</mat-icon>
+                      <div class="contact-details">
+                        <strong>{{ appointment.contact.name }}</strong>
+                        <p class="email">{{ appointment.contact.email }}</p>
+
+                        @if (appointment.contact.phone) {
+                          <p class="phone">{{ appointment.contact.phone }}</p>
+                        }
+                      </div>
+                    </div>
+
+                    @if (appointment.vehicle) {
+                      <div class="vehicle-info">
+                        <mat-icon>directions_car</mat-icon>
+                        <div class="vehicle-details">
+                          <strong>Vehículo</strong>
+
+                          @if (appointment.vehicle.make || appointment.vehicle.model) {
+                            <p>
+                              {{ appointment.vehicle.make }}
+                              {{ appointment.vehicle.model }}
+                            </p>
+                          }
+
+                          @if (appointment.vehicle.year) {
+                            <p>Año: {{ appointment.vehicle.year }}</p>
+                          }
+
+                          @if (appointment.vehicle.licensePlate) {
+                            <p>
+                              <mat-chip>
+                                {{ appointment.vehicle.licensePlate }}
+                              </mat-chip>
+                            </p>
+                          }
+                        </div>
+                      </div>
+                    }
+
+                  </div>
+                </mat-card-content>
+
+              </mat-card>
+            }
+          </div>
+        }
+
+      }
+    }
+
+  </div>
+</div>

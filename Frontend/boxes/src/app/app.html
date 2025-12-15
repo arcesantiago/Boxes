@@ -1,0 +1,24 @@
+<div class="app-container">
+  <header class="app-header">
+    <div class="header-content">
+      <h1>
+        <mat-icon>build</mat-icon>
+        Boxes - Gestión de Turnos
+      </h1>
+      <nav>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <mat-icon>list</mat-icon>
+          Turnos
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2024 Boxes - Sistema de Gestión de Turnos</p>
+    </footer>
+  </div>

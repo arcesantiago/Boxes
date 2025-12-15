@@ -1,0 +1,150 @@
+<div class="form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>event</mat-icon>
+        Nuevo Turno
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <!-- Workshop Selection -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Taller</mat-label>
+          <mat-select formControlName="placeId" required>
+            <mat-option value="">Seleccione un taller</mat-option>
+            <mat-option *ngFor="let workshop of workshops" [value]="workshop.id">
+              {{ workshop.name || 'Taller ' + workshop.id }}
+              <span *ngIf="workshop.formattedAddress" class="workshop-address">
+                - {{ workshop.formattedAddress }}
+              </span>
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('placeId')?.hasError('required')">
+            El taller es requerido
+          </mat-error>
+          <mat-error *ngIf="form.get('placeId')?.hasError('invalidWorkshop')">
+            Seleccione un taller válido
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Date and Time -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha y Hora</mat-label>
+          <input matInput type="datetime-local" formControlName="appointmentAt" required>
+          <mat-icon matSuffix>calendar_today</mat-icon>
+          <mat-error *ngIf="form.get('appointmentAt')?.hasError('required')">
+            La fecha y hora son requeridas
+          </mat-error>
+          <mat-error *ngIf="form.get('appointmentAt')?.hasError('pastDate')">
+            La fecha debe ser futura
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Service Type -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tipo de Servicio</mat-label>
+          <input matInput formControlName="serviceType" placeholder="Ej: Cambio de aceite, Alineación, etc." required>
+          <mat-error *ngIf="form.get('serviceType')?.hasError('required')">
+            El tipo de servicio es requerido
+          </mat-error>
+          <mat-error *ngIf="form.get('serviceType')?.hasError('maxlength')">
+            El tipo de servicio no puede exceder 200 caracteres
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Contact Information -->
+        <h3 class="section-title">
+          <mat-icon>person</mat-icon>
+          Datos de Contacto
+        </h3>
+
+        <div formGroupName="contact">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-error *ngIf="contactGroup?.get('name')?.hasError('required')">
+              El nombre es requerido
+            </mat-error>
+            <mat-error *ngIf="contactGroup?.get('name')?.hasError('maxlength')">
+              El nombre no puede exceder 200 caracteres
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" required>
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="contactGroup?.get('email')?.hasError('required')">
+              El email es requerido
+            </mat-error>
+            <mat-error *ngIf="contactGroup?.get('email')?.hasError('email')">
+              Ingrese un email válido
+            </mat-error>
+            <mat-error *ngIf="contactGroup?.get('email')?.hasError('maxlength')">
+              El email no puede exceder 200 caracteres
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Teléfono (Opcional)</mat-label>
+            <input matInput type="tel" formControlName="phone">
+            <mat-icon matSuffix>phone</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Vehicle Information (Optional) -->
+        <h3 class="section-title">
+          <mat-icon>directions_car</mat-icon>
+          Datos del Vehículo (Opcional)
+        </h3>
+
+        <div formGroupName="vehicle">
+          <div class="row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Marca</mat-label>
+              <input matInput formControlName="make">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Modelo</mat-label>
+              <input matInput formControlName="model">
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Año</mat-label>
+              <input matInput type="number" formControlName="year" min="1900" [max]="maxYear">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Patente</mat-label>
+              <input matInput formControlName="licensePlate">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="error" class="error-message">
+          <mat-icon>error</mat-icon>
+          {{ error }}
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button mat-button type="button" (click)="cancel()">
+            <mat-icon>cancel</mat-icon>
+            Cancelar
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">
+            <mat-icon *ngIf="!loading">save</mat-icon>
+            <mat-spinner *ngIf="loading" diameter="20" class="inline-spinner"></mat-spinner>
+            {{ loading ? 'Guardando...' : 'Guardar Turno' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

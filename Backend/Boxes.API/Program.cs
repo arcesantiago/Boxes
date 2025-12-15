@@ -5,12 +5,19 @@ using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
-//builder.Services.AddFluentValidationAutoValidation();
-//builder.Services.AddFluentValidationClientsideAdapters();
 
-// Configurar Swagger/OpenAPI
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -18,7 +25,7 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "Boxes API",
         Version = "v1",
-        Description = "API para gestión de turnos y talleres",
+        Description = "API para gestiï¿½n de turnos y talleres",
         Contact = new OpenApiContact
         {
             Name = "Boxes Team",
@@ -26,7 +33,6 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 
-    // Incluir comentarios XML si los hay
     var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     if (File.Exists(xmlPath))
@@ -35,25 +41,26 @@ builder.Services.AddSwaggerGen(c =>
     }
 });
 
-// Registrar servicios de aplicación e infraestructura
 builder.Services.AddAplicationServices();
 builder.Services.AddInfrastructureServices();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Boxes API v1");
-        c.RoutePrefix = string.Empty; // Swagger UI en la raíz
+        c.RoutePrefix = string.Empty;
         c.DisplayRequestDuration();
     });
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseCors("AllowAngularApp");
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
