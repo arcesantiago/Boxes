@@ -4,7 +4,7 @@
 
 ---
 
-## 🏗️ Arquitectura y patrones implementados
+## 🏗️ Backend Arquitectura y patrones implementados (.NET 10)
 
 ### Clean Architecture
 - Separación en capas:
