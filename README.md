@@ -1,47 +1,47 @@
 # Boxes
 
-An醠isis del proyecto
+An谩lisis del proyecto
 
 1. Arquitectura y patrones implementados
 Clean Architecture
-Separaci髇 en capas: Domain, Application, Infrastructure, API
+Separaci贸n en capas: Domain, Application, Infrastructure, API
 Domain sin dependencias externas
 CQRS con MediatR
 Comandos (CreateAppointmentCommand) y Queries (GetAllAppointmentsQuery) separados
-Handlers dedicados por operaci髇
+Handlers dedicados por operaci贸n
 DDD (Domain-Driven Design)
-Entidades con l骻ica encapsulada (Appointment, Contact, Vehicle)
+Entidades con l贸gica encapsulada (Appointment, Contact, Vehicle)
 Value Objects (Contact, Vehicle)
 Validaciones en el dominio (constructor de Appointment)
 Repository Pattern
-Abstracci髇 con IAppointmentRepository, IReadRepository<T>, IWriteRepository<T>
-Implementaci髇 in-memory para desarrollo/testing
+Abstracci贸n con IAppointmentRepository, IReadRepository<T>, IWriteRepository<T>
+Implementaci贸n in-memory para desarrollo/testing
 Unit of Work (IAppointmentUnitOfWork)
 
-2. Decisiones t閏nicas destacables
+2. Decisiones t茅cnicas destacables
 Decorator Pattern para caching
-// CachedWorkshopService envuelve WorkshopService// Permite agregar caching sin modificar la l骻ica original
-Ventaja: separaci髇 de responsabilidades, f醕il de testear
+// CachedWorkshopService envuelve WorkshopService// Permite agregar caching sin modificar la l贸gica original
+Ventaja: separaci贸n de responsabilidades, f谩cil de testear
 Registro manual en DI (sin Scrutor)
 Custom JSON Converter
 AddressJsonConverter maneja inconsistencias de la API externa (string vs objeto)
-Evita StackOverflowException usando opciones de serializaci髇 separadas
-Validaci髇 en m鷏tiples capas
+Evita StackOverflowException usando opciones de serializaci贸n separadas
+Validaci贸n en m煤ltiples capas
 Frontend: validadores reactivos en Angular
 Application: FluentValidation (CreateAppointmentCommandValidator)
 Domain: validaciones en constructores
 Manejo de errores centralizado
 ExceptionMiddleware unifica respuestas de error
-Tipos de excepci髇 espec韋icos (ValidationException, NotFoundException)
+Tipos de excepci贸n espec铆ficos (ValidationException, NotFoundException)
 Respuestas estructuradas con CodeErrorException
 
 3. Consumo de API externa
 WorkshopService
-HttpClientFactory para gesti髇 de conexiones
-Autenticaci髇 Basic configurada
+HttpClientFactory para gesti贸n de conexiones
+Autenticaci贸n Basic configurada
 Manejo de errores HTTP
-AutoMapper para transformaci髇 de DTOs
-Caching estrat間ico
+AutoMapper para transformaci贸n de DTOs
+Caching estrat茅gico
 CachedWorkshopService con IMemoryCache
 TTL de 5 minutos
 Reduce llamadas a la API externa
@@ -50,48 +50,48 @@ Reduce llamadas a la API externa
 Arquitectura
 Componentes standalone
 Servicios inyectables (AppointmentsService, WorkshopsService)
-Reactive Forms con validaci髇
+Reactive Forms con validaci贸n
 Estado reactivo
 Uso de Observables (appointments$)
 Control de flujo con async pipe
 Manejo de estados: loading, error, empty
 
-5. Calidad de c骴igo
+5. Calidad de c贸digo
 Fortalezas
-Separaci髇 de responsabilidades
+Separaci贸n de responsabilidades
 Interfaces bien definidas
-Tests unitarios e integraci髇
-C骴igo documentado (comentarios XML en algunos puntos)
-羠eas de mejora sugeridas
-Documentaci髇 XML: habilitar generaci髇 y completar comentarios
-Logging: m醩 contexto en logs (correlaci髇 IDs, m閠ricas)
-Configuraci髇: mover credenciales y URLs a appsettings.json
+Tests unitarios e integraci贸n
+C贸digo documentado (comentarios XML en algunos puntos)
+脕reas de mejora sugeridas
+Documentaci贸n XML: habilitar generaci贸n y completar comentarios
+Logging: m谩s contexto en logs (correlaci贸n IDs, m茅tricas)
+Configuraci贸n: mover credenciales y URLs a appsettings.json
 Rate limiting: considerar para la API externa
 
-6. Puntos para la reuni髇
-Enfoque de resoluci髇
-An醠isis inicial: identificar patrones necesarios (CQRS, Repository, Decorator)
-Testing: TDD en casos cr韙icos (validaciones, conversi髇 JSON)
-Decisiones t閏nicas
-In-memory vs EF Core: in-memory para simplicidad del desaf韔
+6. Puntos para la reuni贸n
+Enfoque de resoluci贸n
+An谩lisis inicial: identificar patrones necesarios (CQRS, Repository, Decorator)
+Testing: TDD en casos cr铆ticos (validaciones, conversi贸n JSON)
+Decisiones t茅cnicas
+In-memory vs EF Core: in-memory para simplicidad del desaf铆o
 AutoMapper vs mapeo manual: AutoMapper para reducir boilerplate
 Angular standalone: aprovechar features modernas
 Dificultades y soluciones
 StackOverflowException en AddressJsonConverter
-Soluci髇: opciones de serializaci髇 separadas
+Soluci贸n: opciones de serializaci贸n separadas
 Inconsistencia de datos (Address como string vs objeto)
-Soluci髇: converter personalizado
+Soluci贸n: converter personalizado
 Carga inicial de appointments en Angular
-Soluci髇: uso de Observables y control de flujo
+Soluci贸n: uso de Observables y control de flujo
 Oportunidades de mejora
-Agregar paginaci髇 para listas grandes
+Agregar paginaci贸n para listas grandes
 Implementar refresh token para la API externa
 Agregar health checks
 Implementar retry policies con Polly
 
-Ejecuci髇
+Ejecuci贸n
 
-Ejecutar ambos simult醤eamente
+Ejecutar ambos simult谩neamente
 Terminal 1 (Backend):
 cd Backend/Boxes.APIdotnet run --launch-profile http
 Terminal 2 (Frontend):
